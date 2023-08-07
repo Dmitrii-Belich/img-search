@@ -1,5 +1,6 @@
 {
   "name": "img-search",
+  "homepage": "https://dmitrii-belich.github.io/img-search",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
