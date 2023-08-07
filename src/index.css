@@ -1,0 +1,38 @@
+:root {
+  --color-g-bg-overflow: #000;
+  --color-g-bg-primary: #161617;
+  --color-g-bg-secondary: #232325;
+  --color-g-bg-tertiary: #2f2f32;
+  --color-g-bg-fill-6: rgba(255, 255, 255, .06);
+  --color-g-bg-fill-12: rgba(255, 255, 255, .12);
+  --color-g-bg-fill-18: rgba(255, 255, 255, .18);
+  --color-g-bg-fill-24: rgba(255, 255, 255, .24);
+  --color-g-bg-fill-30: rgba(255, 255, 255, .3);
+  --color-g-bg-red-primary: #ff5b5b;
+  --color-g-bg-yellow-primary: #fdde55;
+  --color-g-bg-blue-primary: #62aafd;
+  --color-g-text-primary: #fff;
+  --color-g-text-secondary: rgba(255, 255, 255, .87);
+  --color-g-text-tertiary: rgba(255, 255, 255, .6);
+  --color-g-text-quaternary: rgba(255, 255, 255, .45);
+  --color-g-text-quinary: rgba(255, 255, 255, .38);
+  --color-g-text-disabled: rgba(255, 255, 255, .27);
+  --color-g-text-blue-primary: #6382b4;
+  --color-g-text-blue-hover: #0060d0;
+}
+
+:root {
+  font-size: calc(1.25em + .75vw - 10.05px);
+  min-height: 100%;
+  background: var(--color-g-bg-primary);
+  color-scheme: dark;
+  font-family: 'YS Text', 'Helvetica Neue', Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+body, #root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  margin: 0;
+}
