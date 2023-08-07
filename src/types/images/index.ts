@@ -17,3 +17,13 @@ export interface ImagesState {
   currentPage: number
   totalPages: number
 }
+
+export interface ImagesResponse {
+  photos: {
+    photo: Image[]
+    page: number
+    pages: number
+  }
+  stat: string
+  message?: string
+}

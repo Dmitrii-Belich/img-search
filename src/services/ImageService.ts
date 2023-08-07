@@ -1,5 +1,6 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
-import {Image} from '../types/images'
+
+import {Image, ImagesResponse} from '../types/images'
 
 const api_key = '2fffc389367d2feb91ee834c817367db'
 
@@ -32,11 +33,7 @@ export const ImageAPI = createApi({
           }
         }
       },
-      transformResponse: (rawResult: {
-        photos: { photo: Image[], page: number, pages: number },
-        stat: string,
-        message: string
-      }, meta) => {
+      transformResponse: (rawResult: ImagesResponse, meta) => {
         if (meta?.response?.status === 200 && rawResult?.stat === 'ok') {
           return {
             images: rawResult.photos.photo,
@@ -44,7 +41,7 @@ export const ImageAPI = createApi({
             totalPages: rawResult.photos.pages
           }
         } else {
-          throw Error(meta?.response?.statusText || rawResult.message)
+          throw Error(rawResult.message || meta?.response?.statusText)
         }
       }
     })
