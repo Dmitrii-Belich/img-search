@@ -1,22 +1,19 @@
 import './index.css'
 
 import React from 'react'
-import {useSelector} from 'react-redux'
-import {RootState} from '../../types/reducers'
+import {useAppSelector} from '../../hooks'
 
 import SearchString from '../SearchString'
 import SearchResults from '../SearchResults'
 
 
 function MainComponent() {
-  const {
-    images,
-    error,
-    loading,
-  } = useSelector((state: RootState) => state.images)
+  const searchTerm = useAppSelector((state) => state.searchTerm)
 
 
-  return (<section className={`main ${(images.length || error || loading) && 'resulted'}`}>
+  return (<section
+      className={`main ${searchTerm && 'resulted'}`}
+    >
       <SearchString></SearchString>
 
       <SearchResults></SearchResults>

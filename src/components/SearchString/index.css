@@ -62,6 +62,7 @@
   color: #000;
   transition: all 0.2s ease;
 }
+
 .search-string--filed .search-string__submit {
   opacity: 1;
   pointer-events: auto;
@@ -86,7 +87,7 @@
   background-color: transparent;
   box-sizing: content-box;
   transition: all 0.2s ease;
-  color: rgba(255,255,255,.6);
+  color: rgba(255, 255, 255, .6);
 }
 
 .search-string--filed .search-string__clear {

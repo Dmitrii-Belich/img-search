@@ -10,11 +10,10 @@ export interface Image {
 }
 
 export interface ImagesState {
-  term: string
+  text: string
   images: Image[]
   loading: boolean
   error: string | null
   currentPage: number
   totalPages: number
 }
-

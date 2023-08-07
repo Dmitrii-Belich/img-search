@@ -1,39 +1,77 @@
 import './index.css'
 
 import React, {useCallback, useEffect} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {ThunkDispatch} from 'redux-thunk'
-import {AnyAction} from 'redux'
 
-import {fetchImages} from '../../actions/images'
+import {useAppDispatch, useAppSelector} from '../../hooks'
+import {ImageAPI} from '../../services/ImageService'
+import {imagesSlice} from '../../store/reducers/images'
 
-import {RootState} from '../../types/reducers'
 import {throttle} from '../../utils'
 
 function SearchResults() {
-  const dispatch = useDispatch<ThunkDispatch<{}, {}, AnyAction>>()
+  const dispatch = useAppDispatch()
+  const {
+    setText,
+    setLoading,
+    setCurrentPage,
+    setTotalPages,
+    setImages,
+    setError
+  } = imagesSlice.actions
+
   const {
     images,
-    loading,
-    error,
+    text,
     currentPage,
-    totalPages,
-    term
-  } = useSelector((state: RootState) => state.images)
+    totalPages
+  } = useAppSelector(state => state.images)
+
+  const searchTerm = useAppSelector(state => state.searchTerm)
+
+
+  const {data, isLoading, error}
+    = ImageAPI.useFetchImagesQuery({text, page: currentPage}, {skip: !text})
+
+  useEffect(() => {
+    setLoading(isLoading)
+  }, [isLoading, setLoading])
+
+  useEffect(() => {
+    dispatch(setError(JSON.stringify(error)))
+  }, [dispatch, error, setError])
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setCurrentPage(data.currentPage))
+      dispatch(setTotalPages(data.totalPages))
+      if (data.currentPage === 1) {
+        dispatch(setImages(data.images))
+      } else {
+        dispatch(setImages([...images, ...data.images]))
+      }
+    }
+  }, [data])
+
+  useEffect(throttle(() => {
+    dispatch(setText(searchTerm))
+    dispatch(setImages([]))
+  }, 500), [searchTerm])
+
 
   const isPreloaderVisible = useCallback(
-    () => (!error && currentPage && (currentPage !== totalPages)) || loading,
-    [error, currentPage, totalPages, loading]
+    () => (!error && currentPage && (currentPage !== totalPages)) || isLoading,
+    [error, currentPage, totalPages, isLoading]
   )
+
   const scrollHandler = useCallback(() => {
-    if (images.length
-      && !loading
+    if (data && data.images.length
+      && !isLoading
       && (window.scrollY > (document.documentElement.scrollHeight - window.innerHeight * 2))
       && currentPage < totalPages
     ) {
-      dispatch(fetchImages(term, currentPage + 1, 0))
+      setCurrentPage(currentPage + 1)
     }
-  }, [loading, images, currentPage, totalPages, dispatch, term])
+  }, [isLoading, data, currentPage, totalPages, dispatch])
 
   useEffect(() => {
     const throttledHandler = throttle(scrollHandler, 100)
@@ -83,7 +121,7 @@ function SearchResults() {
           : ''}
        </>
        : <div className="search-results__error">
-         Произошла ошибка: &quot;{error}&quot; <br/>
+         Произошла ошибка: &quot;{error && JSON.stringify(error)}&quot; <br/>
          Перезагрузите страницу или попробуйте позже
        </div>}
     </section>
