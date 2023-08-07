@@ -3,9 +3,12 @@ import './index.css'
 import React from 'react'
 
 import {useAppDispatch, useAppSelector} from '../../hooks'
+import useSearchQuery from '../../hooks/useSearchQuery'
 import {searchTermSlice} from '../../store/reducers/searchTerm'
 
 function SearchString() {
+  useSearchQuery()
+
   const {setSearchTerm} = searchTermSlice.actions
   const searchTerm = useAppSelector(state => state.searchTerm)
   const dispatch = useAppDispatch()
