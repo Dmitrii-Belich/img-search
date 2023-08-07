@@ -15,3 +15,11 @@ export const throttle = <R, A extends any[]>(
     return fn(...args)
   }
 }
+
+export function debounce<F extends (...params: any[]) => void>(fn: F, delay: number) {
+  let timeoutID: number | null = null
+  return function (this: any, ...args: any[]) {
+    clearTimeout(timeoutID || 0)
+    timeoutID = window.setTimeout(() => fn.apply(this, args), delay)
+  } as F
+}

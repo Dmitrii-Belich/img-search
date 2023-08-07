@@ -1,36 +1,34 @@
 import './index.css'
 
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 
-import {fetchImages} from '../../actions/images'
-import {useAppDispatch} from '../../hooks'
-import {imagesSlice} from '../../store/reducers/images'
+import {useAppDispatch, useAppSelector} from '../../hooks'
+import {searchTermSlice} from '../../store/reducers/searchTerm'
 
 function SearchString() {
-  const {clearImages} = imagesSlice.actions
+  const {setSearchTerm} = searchTermSlice.actions
+  const searchTerm = useAppSelector(state => state.searchTerm)
   const dispatch = useAppDispatch()
-  const [searchString, setSearchString] = useState('')
 
   const inputHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchString(evt.target.value)
+    dispatch(setSearchTerm(evt.target.value))
+  }
+
+  const clearHandler = () => {
+    dispatch(setSearchTerm(''))
   }
 
   const submitHandler = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
   }
 
-  useEffect(() => {
-    dispatch(clearImages())
-    dispatch(fetchImages({text: searchString}))
-  }, [searchString, dispatch, clearImages])
-
   return (
     <form
-      className={`search-string ${searchString.length && 'search-string--filed'}`}
+      className={`search-string ${searchTerm.length && 'search-string--filed'}`}
       onSubmit={submitHandler}
     >
       <input
-        value={searchString}
+        value={searchTerm}
         onInput={inputHandler}
         className="search-string__input"
         placeholder="найдётся всё"
@@ -38,7 +36,7 @@ function SearchString() {
       <button
         className="search-string__clear"
         type="reset"
-        onClick={() => setSearchString('')}
+        onClick={clearHandler}
       >
         <svg
           viewBox="0 0 32 32" width="32" height="32" fill="currentColor"

@@ -1,11 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {fetchImages} from '../../../actions/images'
-import {ImagesState} from '../../../types/images'
-import {FetchImagesActionPayload} from '../../../types/images'
+import {Image, ImagesState} from '../../../types/images'
 
 
 const initialState: ImagesState = {
-  term: '',
+  text: '',
   images: [],
   loading: false,
   error: null,
@@ -17,26 +15,22 @@ export const imagesSlice = createSlice({
   name: 'images',
   initialState,
   reducers: {
-    clearImages() {
-      return {...initialState}
-    }
-  },
-  extraReducers: {
-    [fetchImages.pending.type]: (state, action) => {
-      state.loading = true
-      state.error = null
+    setText(state, action: PayloadAction<string>) {
+      state.text = action.payload
     },
-    [fetchImages.fulfilled.type]: (state, action: PayloadAction<FetchImagesActionPayload>) => {
-      state.term = action.payload.term
-      state.images = action.payload.photos.page === 1
-                     ? action.payload.photos.photo
-                     : [...state.images, ...action.payload.photos.photo]
-      state.totalPages = action.payload.photos.pages
-      state.currentPage = action.payload.photos.page
-      state.loading = false
+    setCurrentPage(state, action: PayloadAction<number>) {
+      state.currentPage = action.payload
     },
-    [fetchImages.rejected.type]: (state, action: PayloadAction<string>) => {
-      state.loading = false
+    setTotalPages(state, action: PayloadAction<number>) {
+      state.totalPages = action.payload
+    },
+    setImages(state, action: PayloadAction<Image[]>) {
+      state.images = action.payload
+    },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload
+    },
+    setError(state, action: PayloadAction<string>) {
       state.error = action.payload
     }
   }

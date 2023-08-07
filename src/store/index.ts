@@ -1,10 +1,15 @@
 import {configureStore} from '@reduxjs/toolkit'
-import imagesReducer from './reducers/images'
+import {ImageAPI} from '../services/ImageService'
+import images from './reducers/images'
+import searchTerm from './reducers/searchTerm'
 
 export const store = configureStore({
   reducer: {
-    images: imagesReducer
-  }
+    searchTerm,
+    images,
+    [ImageAPI.reducerPath]: ImageAPI.reducer
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(ImageAPI.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>

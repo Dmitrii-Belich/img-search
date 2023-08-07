@@ -8,14 +8,12 @@ import SearchResults from '../SearchResults'
 
 
 function MainComponent() {
-  const {
-    images,
-    error,
-    loading
-  } = useAppSelector((state) => state.images)
+  const searchTerm = useAppSelector((state) => state.searchTerm)
 
 
-  return (<section className={`main ${(images.length || error || loading) && 'resulted'}`}>
+  return (<section
+      className={`main ${searchTerm && 'resulted'}`}
+    >
       <SearchString></SearchString>
 
       <SearchResults></SearchResults>
