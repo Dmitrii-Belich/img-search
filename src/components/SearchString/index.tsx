@@ -32,7 +32,6 @@ function SearchString() {
         value={searchString}
         onInput={inputHandler}
         className="search-string__input"
-        type="search"
         placeholder="найдётся всё"
       />
       <button

@@ -18,13 +18,15 @@ export default function imagesReducer(state = initialState, action: ImageAction)
       return {
         ...state,
         term: action.payload.term,
-        images: [...state.images, ...action.payload.photos.photo],
+        images: action.payload.photos.page === 1
+                ? action.payload.photos.photo
+                : [...state.images, ...action.payload.photos.photo],
         totalPages: action.payload.photos.pages,
         currentPage: action.payload.photos.page,
         loading: false
       }
     case imageActions.CLEAR_IMAGES:
-      return {...initialState, loading: state.loading}
+      return {...initialState}
     case imageActions.FETCH_IMAGES_ERROR:
       return {...state, loading: false, error: action.error}
     default:
