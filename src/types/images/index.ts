@@ -18,3 +18,11 @@ export interface ImagesState {
   totalPages: number
 }
 
+export interface FetchImagesActionPayload {
+  photos: {
+    page: number
+    pages: number
+    photo: Image[]
+  }
+  term: string
+}

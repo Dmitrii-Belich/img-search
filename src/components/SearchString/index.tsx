@@ -1,14 +1,14 @@
 import './index.css'
 
 import React, {useEffect, useState} from 'react'
-import {ThunkDispatch} from 'redux-thunk'
-import {AnyAction} from 'redux'
-import {useDispatch} from 'react-redux'
 
 import {fetchImages} from '../../actions/images'
+import {useAppDispatch} from '../../hooks'
+import {imagesSlice} from '../../store/reducers/images'
 
 function SearchString() {
-  const dispatch = useDispatch<ThunkDispatch<{}, {}, AnyAction>>()
+  const {clearImages} = imagesSlice.actions
+  const dispatch = useAppDispatch()
   const [searchString, setSearchString] = useState('')
 
   const inputHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,8 +20,9 @@ function SearchString() {
   }
 
   useEffect(() => {
-    dispatch(fetchImages(searchString))
-  }, [searchString, dispatch])
+    dispatch(clearImages())
+    dispatch(fetchImages({text: searchString}))
+  }, [searchString, dispatch, clearImages])
 
   return (
     <form

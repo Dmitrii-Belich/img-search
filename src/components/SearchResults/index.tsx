@@ -1,17 +1,14 @@
 import './index.css'
 
 import React, {useCallback, useEffect} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {ThunkDispatch} from 'redux-thunk'
-import {AnyAction} from 'redux'
 
 import {fetchImages} from '../../actions/images'
+import {useAppDispatch, useAppSelector} from '../../hooks'
 
-import {RootState} from '../../types/reducers'
 import {throttle} from '../../utils'
 
 function SearchResults() {
-  const dispatch = useDispatch<ThunkDispatch<{}, {}, AnyAction>>()
+  const dispatch = useAppDispatch()
   const {
     images,
     loading,
@@ -19,7 +16,7 @@ function SearchResults() {
     currentPage,
     totalPages,
     term
-  } = useSelector((state: RootState) => state.images)
+  } = useAppSelector((state) => state.images)
 
   const isPreloaderVisible = useCallback(
     () => (!error && currentPage && (currentPage !== totalPages)) || loading,
@@ -31,7 +28,7 @@ function SearchResults() {
       && (window.scrollY > (document.documentElement.scrollHeight - window.innerHeight * 2))
       && currentPage < totalPages
     ) {
-      dispatch(fetchImages(term, currentPage + 1, 0))
+      dispatch(fetchImages({text: term, page: currentPage + 1, debounce: 0}))
     }
   }, [loading, images, currentPage, totalPages, dispatch, term])
 
