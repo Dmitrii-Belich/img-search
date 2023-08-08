@@ -55,10 +55,17 @@ function SearchResults() {
     }
   }, [data, dispatch, setCurrentPage, setImages, setTotalPages])
 
-  useEffect(throttle(() => {
-    dispatch(setText(searchTerm))
-    dispatch(setImages([]))
-  }, 500), [searchTerm])
+  const [timeoutId, setTimeoutId] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+    setTimeoutId(window.setTimeout(() => {
+      dispatch(setText(searchTerm))
+      dispatch(setImages([]))
+    }, 500))
+  }, [searchTerm])
 
 
   const isPreloaderVisible = useCallback(
