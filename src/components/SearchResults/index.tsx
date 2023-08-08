@@ -30,6 +30,7 @@ function SearchResults() {
   const searchTerm = useAppSelector(state => state.searchTerm)
 
   const [page, setPage] = useState(1)
+  const [isEmpty, setIsEmpty] = useState(false)
 
 
   const {data, isLoading, error}
@@ -52,25 +53,32 @@ function SearchResults() {
       } else {
         dispatch(setImages([...images, ...data.images]))
       }
+      setIsEmpty(!data.images.length)
     }
   }, [data, dispatch, setCurrentPage, setImages, setTotalPages])
 
   const [timeoutId, setTimeoutId] = useState<number | null>(null)
 
   useEffect(() => {
+    if (isEmpty) {
+      setIsEmpty(false)
+    }
+    if (images.length) {
+      dispatch(setImages([]))
+    }
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
     setTimeoutId(window.setTimeout(() => {
       dispatch(setText(searchTerm))
-      dispatch(setImages([]))
+      setTimeoutId(null)
     }, 500))
   }, [searchTerm])
 
 
   const isPreloaderVisible = useCallback(
-    () => (!error && currentPage && (currentPage !== totalPages)) || isLoading,
-    [error, currentPage, totalPages, isLoading]
+    () => (!error && currentPage && (currentPage !== totalPages)) || isLoading || timeoutId,
+    [error, currentPage, totalPages, isLoading, timeoutId]
   )
 
   const scrollHandler = useCallback(() => {
@@ -93,7 +101,7 @@ function SearchResults() {
 
   return (
     <section className="search-results">
-      {!error
+      {!error && !isEmpty
        ? <>
          <div className="search-results__container">
            {images.map((image, i) => {
@@ -131,7 +139,11 @@ function SearchResults() {
           ? <div className="preloader"></div>
           : ''}
        </>
-       : <div className="search-results__error">
+       : isEmpty
+         ? <div className="search-results__error">
+           По вашему запросу ничего не найдено
+         </div>
+         :<div className="search-results__error">
          Произошла ошибка: &quot;{error && JSON.stringify(error)}&quot; <br/>
          Перезагрузите страницу или попробуйте позже
        </div>}
