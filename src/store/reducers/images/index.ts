@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+
 import {fetchImages} from '../../../actions/images'
+
 import {ImagesState} from '../../../types/images'
 import {FetchImagesActionPayload} from '../../../types/images'
 
