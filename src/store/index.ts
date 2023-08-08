@@ -1,5 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit'
+
 import {ImageAPI} from '../services/ImageService'
+
 import images from './reducers/images'
 import searchTerm from './reducers/searchTerm'
 

@@ -1,6 +1,7 @@
 import './index.css'
 
 import React from 'react'
+
 import {useAppSelector} from '../../hooks'
 
 import SearchString from '../SearchString'

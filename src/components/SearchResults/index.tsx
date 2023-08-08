@@ -1,8 +1,9 @@
 import './index.css'
 
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 
 import {useAppDispatch, useAppSelector} from '../../hooks'
+
 import {ImageAPI} from '../../services/ImageService'
 import {imagesSlice} from '../../store/reducers/images'
 
@@ -28,9 +29,11 @@ function SearchResults() {
 
   const searchTerm = useAppSelector(state => state.searchTerm)
 
+  const [page, setPage] = useState(1)
+
 
   const {data, isLoading, error}
-    = ImageAPI.useFetchImagesQuery({text, page: currentPage}, {skip: !text})
+    = ImageAPI.useFetchImagesQuery({text, page}, {skip: !text})
 
   useEffect(() => {
     setLoading(isLoading)
@@ -50,7 +53,7 @@ function SearchResults() {
         dispatch(setImages([...images, ...data.images]))
       }
     }
-  }, [data])
+  }, [data, dispatch, setCurrentPage, setImages, setTotalPages])
 
   useEffect(throttle(() => {
     dispatch(setText(searchTerm))
@@ -64,14 +67,15 @@ function SearchResults() {
   )
 
   const scrollHandler = useCallback(() => {
-    if (data && data.images.length
+    if (images.length
       && !isLoading
       && (window.scrollY > (document.documentElement.scrollHeight - window.innerHeight * 2))
       && currentPage < totalPages
+      && page !== currentPage + 1
     ) {
-      setCurrentPage(currentPage + 1)
+      setPage(currentPage + 1)
     }
-  }, [isLoading, data, currentPage, totalPages, dispatch])
+  }, [images.length, isLoading, currentPage, totalPages, page])
 
   useEffect(() => {
     const throttledHandler = throttle(scrollHandler, 100)

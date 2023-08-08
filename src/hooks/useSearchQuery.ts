@@ -1,9 +1,11 @@
 import {useEffect} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
-import {searchTermSlice} from '../store/reducers/searchTerm'
+
 import {useAppDispatch, useAppSelector} from './index'
 
-export default function useSearchQuery () {
+import {searchTermSlice} from '../store/reducers/searchTerm'
+
+export default function useSearchQuery() {
   const {setSearchTerm} = searchTermSlice.actions
   const searchTerm = useAppSelector(state => state.searchTerm)
   const dispatch = useAppDispatch()
@@ -18,9 +20,13 @@ export default function useSearchQuery () {
   }, [dispatch, location.search, setSearchTerm])
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search)
-    queryParams.set('q', searchTerm)
-    navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true })
+    if (searchTerm) {
+      const queryParams = new URLSearchParams(location.search)
+      queryParams.set('q', searchTerm)
+      navigate(`${location.pathname}?${queryParams.toString()}`, {replace: true})
+    } else {
+      navigate(location.pathname, {replace: true})
+    }
   }, [location.pathname, location.search, navigate, searchTerm])
 }
 
